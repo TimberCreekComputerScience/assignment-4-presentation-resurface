@@ -22,8 +22,11 @@ public class GameFrame implements Screen {
     Music music ;
     ArrayList<beater> beats;
     ArrayList<beater> twobeat;
-    ArrayList<Rectangle> hitboxes;
     OrthographicCamera camera;
+    String gameOver;
+    String restart;
+    boolean touched;
+    float counter;
 
     public GameFrame( GameController g){
         myGame = g;
@@ -32,22 +35,20 @@ public class GameFrame implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        sprite = new Sprite(new Texture("beat.jpg"));
+        sprite = new Sprite(new Texture("beatBG.PNG"));
        sprite.setPosition(0,0);
-
+touched = false;
 
   beats= new ArrayList<beater>();
         twobeat= new ArrayList<beater>();
   //beats.add(new beater(500, 0, 1000,  200, 1, true));
-        beats.add(new beater(300, 1, true, 700, 0,100));
-        beats.add(new beater(200, 1, true, 700, 0,100));
-        beats.add(new beater(50, 1, true, 700, 0,100));
-        //beats.add(new beater(500, 0, 755, 1, 0, false));
-        twobeat.add(new beater(300, 0, false, 700, 0,100));
-        twobeat.add(new beater(400, 0, false, 700, 0,100));
-        twobeat.add(new beater(550, 0, false, 700, 0,100));
+        beats.add(new beater(0, 1, false, 700, 0,250));
 
-        hitboxes = new ArrayList<Rectangle>();
+        //beats.add(new beater(500, 0, 755, 1, 0, false));
+        twobeat.add(new beater(700, 0, true, 700, 0,250));
+
+
+
         music = Gdx.audio.newMusic(Gdx.files.internal("Music/Steellife.wav"));
       camera = new OrthographicCamera();
       camera.setToOrtho(false, 960, 600);
@@ -57,12 +58,18 @@ public class GameFrame implements Screen {
     @Override
     public void render(float delta) {
 
-        music.play();
+       // music.play();
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+        counter += delta;
+        if(counter >= .6){
+            counter -= .6;
+            beats.add(new beater(0, 1, false, 700, 0,250));
+            twobeat.add(new beater(750, 0, true, 700, 0,250));
 
+        }
         sprite.draw(batch);
         for(beater b: beats){
             b.movement();
@@ -76,6 +83,19 @@ public class GameFrame implements Screen {
             B.draw(batch);
 
         }
+        if ((beats.get(0).getVertex().x > 440) && twobeat.get(0).getVertex().x < 360) {
+            beats.remove(0);
+            twobeat.remove(0);
+        }
+        if(Gdx.input.justTouched()) {
+            if (beats.get(0).getHitbox().overlaps(twobeat.get(0).getHitbox())) {
+                System.out.println("Yes");
+                beats.remove(0);
+                twobeat.remove(0);
+            }
+
+        }
+
         batch.end();
     }
 

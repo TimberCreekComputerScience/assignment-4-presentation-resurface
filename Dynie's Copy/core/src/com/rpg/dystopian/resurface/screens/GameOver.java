@@ -2,8 +2,6 @@ package com.rpg.dystopian.resurface.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,73 +10,60 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.rpg.dystopian.resurface.GameController;
 
-public class MainMenu implements Screen {
+public class GameOver implements Screen {
     GameController myGame;
     SpriteBatch batch;
-    Texture background;
-    Sprite img;
-    String gameTitle;
+    Sprite sprite;
     BitmapFont titleBitmap;
-    String gameStart;
-    BitmapFont startBitmap;
-    Music music;
+    BitmapFont restartBitmap;
+    String gameOver;
+    String restart;
     OrthographicCamera camera;
-
-    public MainMenu(GameController g){
+    public GameOver( GameController g){
         myGame = g;
     }
-
     @Override
     public void show() {
         batch = new SpriteBatch();
-        background = new Texture("mainmenu2.png");
-        img = new Sprite(background);
-        img.setPosition(0, 0);
-        img.setSize(960, 600);
-        //img.setPosition(525, 25);
-        //img.setSize(600, 200);
-        music = Gdx.audio.newMusic(Gdx.files.internal("mainmenuMusic.mp3"));
+        sprite = new Sprite(new Texture("mainmenu2.png"));
+        sprite.setSize(960, 600);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 960, 600);
     }
 
     @Override
     public void render(float delta) {
-        //batch.setProjectionMatrix(camera.combined);
-        Gdx.gl.glClearColor(0, 0, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        img.draw(batch);
+        sprite.draw(batch);
         batch.end();
         displayText();
-        //music.play();
         if(Gdx.input.justTouched()) {
             Vector3 touched = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touched);
-            if (touched.x > 320 && touched.x < 640 && touched.y > 135 && touched.y < 200) {
-                myGame.setScreen(new GameFrame(myGame));
-                music.stop();
+            if (touched.x > 250 && touched.x < 690 && touched.y > 150 && touched.y < 250) {
+                myGame.setScreen(new MainMenu(myGame));
+
             }
         }
-    }
 
+    }
     public void displayText(){
 
-        gameTitle = "resurface";
-        gameStart = "start";
+       gameOver = "GAME OVER";
+       restart = "restart";
 
         titleBitmap = new BitmapFont(Gdx.files.internal("font.fnt"));
         titleBitmap.getData().setScale(2);
-        startBitmap = new BitmapFont(Gdx.files.internal("font.fnt"));
-        startBitmap.getData().setScale(2);
+        restartBitmap = new BitmapFont(Gdx.files.internal("font.fnt"));
+        restartBitmap.getData().setScale(2);
 
         //draw
         batch.begin();
         titleBitmap.setColor(0.5f, 0f, 0f, 1.0f);
-        titleBitmap.draw(batch, gameTitle, 185, 500);
-        startBitmap.setColor(0.5f, 0f, 0f, 1.0f);
-        startBitmap.draw(batch, gameStart, 325, 200);
+        titleBitmap.draw(batch, gameOver, 185, 430);
+        restartBitmap.setColor(0.5f, 0f, 0f, 1.0f);
+        restartBitmap.draw(batch, restart, 274, 250);
         batch.end();
     }
 
@@ -104,6 +89,6 @@ public class MainMenu implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
+
     }
 }

@@ -13,61 +13,66 @@ import java.util.ArrayList;
 public class beater {
     Music[] music;
     public int x;
-            public int y;
 
     Rectangle hitbox;
 
     Sprite beat;
     Vector2 position;
     float velocity;
-        boolean move;
-        //  boolean neg;
-        int max;
-        int min;
+    boolean move;
+    //  boolean neg;
+    int max;
+    int min;
 
-        Texture[] textures = {new Texture("red.png"), new Texture("blue.png")};
-    public beater(int x,  int texture, boolean move, int max, int min, float velocity){
-            this.velocity = velocity;
-            position = new Vector2(x , y);
-            beat = new Sprite(textures[texture]);
-            beat.setSize(50, 100);
-            beat.setPosition(350,y);
+    Texture[] textures = {new Texture("beaters.png"), new Texture("beaters.png")};
+
+    public beater(int x, int texture, boolean move, int max, int min, float velocity) {
+        this.velocity = velocity;
+        position = new Vector2(x, 0);
+        beat = new Sprite(textures[texture]);
+        beat.setSize(50, 100);
+        beat.setPosition(350, 0);
 
         hitbox = new Rectangle();
- hitbox.x = beat.getX();
- hitbox.y = beat.getY();
+        hitbox.x = beat.getX();
+        hitbox.y = beat.getY();
+        hitbox.width=beat.getWidth();
+        hitbox.height=beat.getHeight();
         this.max = max;
         this.min = min;
         this.move = move;
 
 
-
     }
 
-    public void update(float deltaTime){
-position.x += velocity * deltaTime;
+    public void update(float deltaTime) {
+        position.x += velocity * deltaTime;
         hitbox.x = beat.getX();
         hitbox.y = beat.getY();
-       // hitbox.x = position.x;
+        // hitbox.x = position.x;
         //hitbox.y = position.y;
         beat.setPosition(position.x, position.y);
 
     }
-    public float getX(){
+
+    public float getX() {
         return position.x;
     }
-    public float getY(){
+
+    public float getY() {
         return position.y;
     }
-    void click(){
+
+    void click() {
         //if(overlap){ action performed }
     }
 
-  public  void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
 
         beat.draw(batch);
     }
-    public void movement(){
+
+    public void movement() {
         /*
         if (move){
             velocity.x = - velocity.x;
@@ -77,25 +82,33 @@ position.x += velocity * deltaTime;
             position.x = min+1;
         }
         */
-        if(position.x >= max){
+        /*if(position.x >= max){
             move = true;
         }
         else if(position.x <= min)
         {
             move = false;
-        }if(move){
-    velocity = -Math.abs(velocity);
+        }*/
+        if (move) {
+            velocity = -Math.abs(velocity);
 
 
-}
-else {
+        } else {
             velocity = Math.abs(velocity);
 
 
-}
+        }
     }
 
-    void musicFinished(){
+
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+    public Vector2 getVertex(){
+        return position;
+    }
+
+void musicFinished(){
 
     }
 
