@@ -13,39 +13,41 @@ import java.util.ArrayList;
 public class Beater {
     Music[] music;
     public int x;
-    public int y;
+
 
     Rectangle hitbox;
 
     Sprite beat;
     Vector2 position;
-    Vector2 velocity;
+    float velocity;
+    boolean move;
     int max;
     int min;
 
-
     Texture[] textures = {new Texture("beaters.png"), new Texture("beaters.png")};
-    public Beater(int x, int y, int max, int min, int text){
 
-        velocity = new Vector2(800, 0);
-        position = new Vector2(x , y);
-        beat = new Sprite(textures[text]);
+    public Beater(int x, int texture, boolean move, int max, int min, float velocity){
+        this.velocity = velocity;
+        position = new Vector2(x , 0);
+        beat = new Sprite(textures[texture]);
         beat.setSize(50, 100);
-        beat.setPosition(x,y);
+        beat.setPosition(350,0);
 
         hitbox = new Rectangle();
 
         hitbox.x = beat.getX();
         hitbox.y = beat.getY();
+        hitbox.width=beat.getWidth();
+        hitbox.height=beat.getHeight();
         this.max = max;
         this.min = min;
+        this.move = move;
 
 
     }
 
     public void update(float deltaTime){
-        position.x += velocity.x * deltaTime;
-        position.y += velocity.y * deltaTime;
+        position.x += velocity * deltaTime;
         hitbox.x = beat.getX();
         hitbox.y = beat.getY();
         // hitbox.x = position.x;
@@ -67,14 +69,30 @@ public class Beater {
         beat.draw(batch);
     }
     public void movement(){
-        if(position.x >= max){
+         /*
+        if (move){
             velocity.x = - velocity.x;
             position.x = max-1;
-        }
-        if(position.x <= min)
-        {
+        }else{
             velocity.x = - velocity.x;
             position.x = min+1;
+        }
+        */
+        /*if(position.x >= max){
+            move = true;
+        }
+        else if(position.x <= min)
+        {
+            move = false;
+        }*/
+        if (move) {
+            velocity = -Math.abs(velocity);
+
+
+        } else {
+            velocity = Math.abs(velocity);
+
+
         }
     }
 
@@ -84,6 +102,9 @@ public class Beater {
 
     public Rectangle getHitbox(){
         return hitbox;
+    }
+    public Vector2 getVertex(){
+        return position;
     }
 
 }

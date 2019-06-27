@@ -28,10 +28,10 @@ public class GameFrame implements Screen {
     Beater beat;
     Music music ;
     ArrayList<Beater> beats;
-    ArrayList<Rectangle> hitboxes;
+    ArrayList<Beater> twobeat;
     Texture beet;
     Sprite beatBG;
-    boolean overlapBeat;
+    float counter;
     //level
     Level level;
 
@@ -52,18 +52,14 @@ public class GameFrame implements Screen {
         hub = new Hub();
         //beater
         beats= new ArrayList<Beater>();
-        beats.add(new Beater(1, 0, 755,  1, 1));
-        beats.add(new Beater(755, 0, 755, 1, 0));
-        hitboxes = new ArrayList<Rectangle>();
-        hitboxes.add(new Rectangle());
-        hitboxes.add(new Rectangle());
+        twobeat= new ArrayList<Beater>();
+        beats.add(new Beater(0, 1, false, 700, 0,250));
+        twobeat.add(new Beater(700, 0, true, 700, 0,250));
         music = Gdx.audio.newMusic(Gdx.files.internal("Music/Mon Amour.wav"));
         beet = new Texture("beatBG.png");
         beatBG = new Sprite(beet);
         beatBG.setPosition(0, 0);
         beatBG.setSize(800, 100);
-        overlapBeat = false;
-
         //level = new Level((int)(Math.random() * 4), (int)(Math.random() * 4), difficulty);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 960, 600);
@@ -82,41 +78,60 @@ public class GameFrame implements Screen {
         batch.begin();
         hub.draw(batch);
         beatBG.draw(batch);
+        counter += delta;
+        if(counter >= .6){
+            counter -= .6;
+            beats.add(new Beater(0, 1, false, 700, 0,250));
+            twobeat.add(new Beater(750, 0, true, 700, 0,250));
+
+        }
         for(Beater b: beats){
-            b.update(Gdx.graphics.getDeltaTime());
             b.movement();
+            b.update(Gdx.graphics.getDeltaTime());
             b.draw(batch);
+
+        }
+        for(Beater B: twobeat){
+            B.movement();
+            B.update(Gdx.graphics.getDeltaTime());
+            B.draw(batch);
+
+        }
+        if ((beats.get(0).getVertex().x > 440) && twobeat.get(0).getVertex().x < 360) {
+            beats.remove(0);
+            twobeat.remove(0);
+        }
+        //player moving
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if (beats.get(0).getHitbox().overlaps(twobeat.get(0).getHitbox())) {
+                System.out.println("Yes");
+                beats.remove(0);
+                twobeat.remove(0);
+            }
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if (beats.get(0).getHitbox().overlaps(twobeat.get(0).getHitbox())) {
+                System.out.println("Yes");
+                beats.remove(0);
+                twobeat.remove(0);
+            }
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            if (beats.get(0).getHitbox().overlaps(twobeat.get(0).getHitbox())) {
+                System.out.println("Yes");
+                beats.remove(0);
+                twobeat.remove(0);
+            }
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            if (beats.get(0).getHitbox().overlaps(twobeat.get(0).getHitbox())) {
+                System.out.println("Yes");
+                beats.remove(0);
+                twobeat.remove(0);
+            }
         }
         batch.end();
 
-        //player moving
-        if(overlapBeat) {
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                System.out.println("up");
-                // player.translate(player.getX(), player.getY() + 50, player, Gdx.graphics.getDeltaTime(), );
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                System.out.println("down");
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                System.out.println("right");
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                System.out.println("left");
-            }
-        }
-        //beats overlapping
-        if(beats.get(0).getHitbox().overlaps(beats.get(1).getHitbox())){
-            overlapBeat = true;
-            System.out.println("overlaps");
-            //if(!(beats.get(0).getHitbox().overlaps(beats.get(1).getHitbox()))){
-                //overlapBeat = false;
-            //}
-        }
-        if(hitboxes.get(0).overlaps(hitboxes.get(1))) {
-            overlapBeat = true;
-            System.out.println("overlaps");
-        }
     }
 
     @Override
